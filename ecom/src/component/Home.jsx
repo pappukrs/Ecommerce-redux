@@ -1,21 +1,17 @@
-import axios from "axios";
+
 import React from "react";
 export const Home = () => {
 
-    const[products,setProducts]=React.useState({
-        loading:false,
-        error:false,
-        data:
-    });
+   
+
+    
 
     React.useEffect(() => {
-      axios({
-        method:"get",
-        url:"https://localhost:8080/products"
-      }).then(res=>setProducts(res.data))
-      .catch(err=>)
-    
-      
-    }, [])
-  return <div>Home</div>;
+       [])
+  return(
+    loading?<h2>...loading</h2>
+    :error?<h2>Something Went Wrong</h2>
+    :data.map(el=><div key={el.id}>{el.title}</div>)
+    <div>Home</div>
+  );
 };
