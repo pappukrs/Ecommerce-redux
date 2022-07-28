@@ -4,7 +4,13 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import { Button } from "@mui/material";
 import axios from "axios";
+import {useDispatch,useSelector} from 'react-redux';
+import { loginError, loginLoading, loginSuccess } from "../Redux/auth/action";
+import { Navigate } from "react-router-dom";
 export const Login = () => {
+    const token=useSelector((state) => state.auth.token);
+
+    const dispatch=useDispatch();
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -19,12 +25,19 @@ export const Login = () => {
   };
 
   const handleLogin = () => {
+    dispatch(loginLoading())
     axios({
       method: "POST",
       url: "https://reqres.in/api/login",
       data: loginData,
-    });
+    }).then(res=>{
+        console.log("res",res)
+        dispatch(loginSuccess(res.data.token))
+    }).catch(err => { dispatch(loginError())});
   };
+  if(token) {
+    <Navigate to="/" />
+  }
   return (
     <Box
       component="form"
