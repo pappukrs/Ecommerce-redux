@@ -16,13 +16,22 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutSuccess } from "../Redux/auth/action";
 
 export const Navbar = () => {
+  const dispatch=useDispatch();
+  const token=useSelector((state)=>state.auth.token);
   const [state, setState] = React.useState(false);
 
   const toggleDrawer = (open) => {
     setState(open);
   };
+    
+  const handleLogout=() => {
+    dispatch(logoutSuccess)
+  }
+
 
   const list = () => (
     <Box
@@ -32,29 +41,28 @@ export const Navbar = () => {
       onKeyDown={() => toggleDrawer(false)}
     >
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
+       
+          <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                 <InboxIcon />
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={"Home"} />
             </ListItemButton>
           </ListItem>
-        ))}
+        
       </List>
       <Divider />
       <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
+      
+         {token?<ListItem disablePadding>
+            <ListItemButton onClick={handleLogout}>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <MailIcon />
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={"LogOut"} />
             </ListItemButton>
-          </ListItem>
-        ))}
+          </ListItem>:<Link></Link>} 
       </List>
     </Box>
   );
@@ -83,9 +91,11 @@ export const Navbar = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             News
           </Typography>
-          <Link to={"/login"}>
+          {token?<Button onClick={handleLogout}color="inherit">Logout</Button>
+                :<Link to={"/login"}>
             <Button color="inherit">Login</Button>
-          </Link>
+          </Link>}
+          
         </Toolbar>
       </AppBar>
     </Box>
